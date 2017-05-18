@@ -2,7 +2,7 @@ package com.example.fb.weather.component;
 
 import android.app.Activity;
 
-import com.example.fb.weather.MainActivity;
+import com.example.fb.weather.view.MainActivity;
 import com.example.fb.weather.moudle.AppModel;
 
 import dagger.Binds;
