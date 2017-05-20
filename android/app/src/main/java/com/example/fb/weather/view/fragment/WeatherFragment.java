@@ -1,14 +1,15 @@
-package com.example.fb.weather.view;
+package com.example.fb.weather.view.fragment;
 
-import android.content.Context;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -16,21 +17,23 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.example.fb.weather.BaseActivity;
+import com.example.fb.weather.BaseFragment;
 import com.example.fb.weather.R;
 import com.example.fb.weather.ResponseListener;
 import com.example.fb.weather.network.response.DailyWeatherResponse;
 import com.example.fb.weather.network.response.ResponseCommon;
+import com.example.fb.weather.network.response.WeatherAllResponse;
 import com.example.fb.weather.presenter.WeatherPresenter;
 import com.example.fb.weather.utils.Utils;
+import com.facebook.react.ReactRootView;
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity
-    implements SensorEventListener, ResponseListener<ResponseCommon> {
+/**
+ * Created by fb on 2017/5/20.
+ */
 
-  SensorManager sensorManager = null;
-  Sensor sensor = null;
-  //    TextView tvContent;
+public class WeatherFragment extends BaseFragment implements ResponseListener<WeatherAllResponse> {
+
   @BindView(R.id.toolbar) Toolbar toolbar;
   @BindView(R.id.toolbar_titile) TextView toolbarTitile;
   @BindView(R.id.todayTem) TextView todayTem;
@@ -52,20 +55,25 @@ public class MainActivity extends BaseActivity
   @BindView(R.id.image_weather_now) ImageView imageWeatherNow;
 
   @Inject WeatherPresenter presenter;
+
   @BindView(R.id.layout_weather) LinearLayout layoutWeather;
   @BindView(R.id.loading) ProgressBar loading;
   @BindView(R.id.toolbar_share) ImageView toolbarShare;
   @BindView(R.id.button_community) TextView buttonCommunity;
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
 
-    initView();
-    getData();
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      Bundle savedInstanceState) {
+    View view = inflater.inflate(R.layout.fragment_weather, container, false);
+    unbinder = ButterKnife.bind(this, view);
+    delegatePresenter(presenter, this);
+
     setToolbar();
-    initSensor();
+    getData();
+    initView();
+
+    return view;
   }
 
   private void initView() {
@@ -84,40 +92,9 @@ public class MainActivity extends BaseActivity
     toolbarTitile.setTextColor(getResources().getColor(R.color.white));
     toolbarShare.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        startShare(MainActivity.this);          //打开分享页面
+        startShare(getActivity());          //打开分享页面
       }
     });
-  }
-
-  private void initSensor() {
-    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-    sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-    sensorManager.unregisterListener(this, sensor);
-  }
-
-  @Override public void onSensorChanged(SensorEvent event) {
-
-    float[] value = event.values;
-
-    if (Math.abs(value[2]) > 1) {
-      //            tvContent.setTextScaleX(value[2]);
-      Log.e("---fb---x---", value[0] + "");
-      Log.e("---fb---y---", value[1] + "");
-      Log.e("---fb---z---", value[2] + "");
-    }
-  }
-
-  @Override public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    Log.e("---fb---other---", (sensor + "") + accuracy + "");
   }
 
   //打开讨论页面
@@ -126,34 +103,34 @@ public class MainActivity extends BaseActivity
 
   }
 
-  @Override public void onSuccessed(ResponseCommon data) {
+  @Override public void onSuccessed(WeatherAllResponse data) {
     layoutWeather.setVisibility(View.VISIBLE);
     hideLoading(loading);
 
-    todayTem.setText(data.HeWeather5.now.tmp);
-    todayWea.setText(data.HeWeather5.now.cond.txt);
-    imageWeatherNow.setImageResource(dealWeatherCode(data.HeWeather5.now.cond.code));
+    todayTem.setText(data.now.tmp);
+    todayWea.setText(data.now.cond.txt);
+    imageWeatherNow.setImageResource(dealWeatherCode(data.now.cond.code));
 
     for (int i = 0; i < 3; i++) {
-      if (data.HeWeather5.daily_forecast.size() > 1) {
-        DailyWeatherResponse daily = data.HeWeather5.daily_forecast.get(i);
+      if (data.daily_forecast.size() > 1) {
+        DailyWeatherResponse daily = data.daily_forecast.get(i);
         switch (i) {
           case 0:
             firstDayFro.setText(daily.date);
             firstDayTem.setText(daily.tmp.min + "℃" + " ~ " + daily.tmp.max + "℃");
-            firstDayIcon.setImageResource(dealWeatherCode(daily.cond.con_d));
+            firstDayIcon.setImageResource(dealWeatherCode(daily.cond.code_d));
             compareTwo(firstDayWea, daily.cond.txt_d, daily.cond.txt_n);
             break;
           case 1:
             secondDayFro.setText(daily.date);
             secondDayTem.setText(daily.tmp.min + "℃" + " ~ " + daily.tmp.max + "℃");
-            secondDayIcon.setImageResource(dealWeatherCode(daily.cond.con_d));
+            secondDayIcon.setImageResource(dealWeatherCode(daily.cond.code_d));
             compareTwo(secondDayWea, daily.cond.txt_d, daily.cond.txt_n);
             break;
           case 2:
             thirdDayFro.setText(daily.date);
             thirdDayTem.setText(daily.tmp.min + "℃" + " ~ " + daily.tmp.max + "℃");
-            thirdDayIcon.setImageResource(dealWeatherCode(daily.cond.con_d));
+            thirdDayIcon.setImageResource(dealWeatherCode(daily.cond.code_d));
             compareTwo(thirdDayWea, daily.cond.txt_d, daily.cond.txt_n);
             break;
         }
@@ -197,7 +174,10 @@ public class MainActivity extends BaseActivity
     }
   }
 
-  @Override public void onFailed(String msg) {
-    Utils.showShortToast(getApplicationContext(), msg);
+  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1) @Override public void onFailed(String msg) {
+    if (! getActivity().isDestroyed())
+      Utils.showShortToast(getActivity(), msg);
   }
+
+
 }

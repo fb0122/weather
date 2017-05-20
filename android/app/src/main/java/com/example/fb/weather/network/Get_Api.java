@@ -5,6 +5,7 @@ import com.example.fb.weather.network.response.ResponseCommon;
 import java.util.HashMap;
 
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
 /**
@@ -13,10 +14,8 @@ import retrofit2.http.QueryMap;
 
 public interface Get_Api {
 
-    @GET("/weather")
-    rx.Observable<ResponseCommon> qcGetWeatherDetail(@QueryMap HashMap<String, Object> params);
-
-
+    @GET("/{version}/weather/")
+    rx.Observable<ResponseCommon> qcGetWeatherDetail(@Path("version") String version, @QueryMap HashMap<String, Object> params);
 
     @GET("/search")
     rx.Observable<ResponseCommon> qcGetCity(@QueryMap HashMap<String, Object> params);

@@ -9,13 +9,15 @@
   "dependencies": {
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.0",
+    "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.3"
   },
   "devDependencies": {
     "babel-jest": "20.0.1",
     "babel-preset-react-native": "1.9.2",
     "jest": "20.0.1",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "react-test-renderer": "16.0.0-alpha.6",
+    "semantic-ui": "^2.2.10"
   },
   "jest": {
     "preset": "react-native"

@@ -11,10 +11,12 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.functions.Action1;
+import timber.log.Timber;
 
 /**
  * Created by fb on 2017/5/18.
@@ -32,9 +34,18 @@ public class RestRepository implements Repository {
         }
     };
 
+
     @Inject
     public RestRepository() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+
+            @Override public void log(String message) {
+                Timber.d(message);
+            }
+        });
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
+                .addNetworkInterceptor(interceptor)
                 .readTimeout(3, TimeUnit.MINUTES)
                 .build();
         Gson customGsonInstance = new GsonBuilder()
