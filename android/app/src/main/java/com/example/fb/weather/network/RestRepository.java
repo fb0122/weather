@@ -16,6 +16,10 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.functions.Action1;
 
+/**
+ * Created by fb on 2017/5/18.
+ */
+
 public class RestRepository implements Repository {
 
     private final Get_Api get_api;
@@ -37,14 +41,14 @@ public class RestRepository implements Repository {
                 .enableComplexMapKeySerialization()
                 .create();
         Retrofit getApiAdapter = new Retrofit.Builder()
-                .baseUrl(Constants.server)
+                .baseUrl(Constants.weather_server)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         Retrofit postApiAdapter = new Retrofit.Builder()
-                .baseUrl(Constants.server)
+                .baseUrl(Constants.weather_server)
                 .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)

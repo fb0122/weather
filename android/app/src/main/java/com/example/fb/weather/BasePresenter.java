@@ -13,6 +13,10 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 
+/**
+ * Created by fb on 2017/5/18.
+ */
+
 public class BasePresenter implements Presenter {
 
     private List<Subscription> sps = new ArrayList<>();

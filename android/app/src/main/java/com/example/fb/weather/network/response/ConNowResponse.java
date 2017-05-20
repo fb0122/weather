@@ -6,6 +6,7 @@ package com.example.fb.weather.network.response;
 
 public class ConNowResponse {
 
+    public String code;
     public String txt; //当前天气描述
 
 }

@@ -1,6 +1,6 @@
 package com.example.fb.weather.network.response;
 
-import com.example.fb.weather.component.DaggerAppComponent;
+import java.util.List;
 
 /**
  * Created by fb on 2017/5/18.
@@ -9,7 +9,7 @@ import com.example.fb.weather.component.DaggerAppComponent;
 public class WeatherAllResponse {
 
     public AQIResponse aqi;
-    public DailyWeatherResponse daily_forecast;
+    public List<DailyWeatherResponse> daily_forecast;
     public WeatherNowResponse now;
     public CityResponse basic;
 
