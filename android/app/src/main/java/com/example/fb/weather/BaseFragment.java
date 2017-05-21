@@ -108,6 +108,7 @@ public abstract class BaseFragment extends Fragment {
     return ob;
   }
 
+
   public void showLoaing(ProgressBar progressBar){
     progressBar.setVisibility(View.VISIBLE);
   }

@@ -1,12 +1,9 @@
 package com.example.fb.weather.view.fragment;
 
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,21 +18,18 @@ import com.example.fb.weather.BaseFragment;
 import com.example.fb.weather.R;
 import com.example.fb.weather.ResponseListener;
 import com.example.fb.weather.network.response.DailyWeatherResponse;
-import com.example.fb.weather.network.response.ResponseCommon;
 import com.example.fb.weather.network.response.WeatherAllResponse;
 import com.example.fb.weather.presenter.WeatherPresenter;
 import com.example.fb.weather.utils.Utils;
-import com.facebook.react.ReactRootView;
 import javax.inject.Inject;
 
 /**
  * Created by fb on 2017/5/20.
  */
 
-public class WeatherFragment extends BaseFragment implements ResponseListener<WeatherAllResponse> {
+public class WeatherFragment extends BaseFragment implements ResponseListener<WeatherAllResponse>, TitleFragment {
 
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.toolbar_titile) TextView toolbarTitile;
+
   @BindView(R.id.todayTem) TextView todayTem;
   @BindView(R.id.text_city) TextView textCity;
   @BindView(R.id.todayWea) TextView todayWea;
@@ -58,7 +52,6 @@ public class WeatherFragment extends BaseFragment implements ResponseListener<We
 
   @BindView(R.id.layout_weather) LinearLayout layoutWeather;
   @BindView(R.id.loading) ProgressBar loading;
-  @BindView(R.id.toolbar_share) ImageView toolbarShare;
   @BindView(R.id.button_community) TextView buttonCommunity;
 
 
@@ -69,7 +62,6 @@ public class WeatherFragment extends BaseFragment implements ResponseListener<We
     unbinder = ButterKnife.bind(this, view);
     delegatePresenter(presenter, this);
 
-    setToolbar();
     getData();
     initView();
 
@@ -84,17 +76,6 @@ public class WeatherFragment extends BaseFragment implements ResponseListener<We
     layoutWeather.setVisibility(View.INVISIBLE);
     showLoaing(loading);
     presenter.getWeatherDetail("北京");
-  }
-
-  private void setToolbar() {
-    initToolbar(toolbar);
-    toolbarTitile.setText("天气");
-    toolbarTitile.setTextColor(getResources().getColor(R.color.white));
-    toolbarShare.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        startShare(getActivity());          //打开分享页面
-      }
-    });
   }
 
   //打开讨论页面
@@ -179,5 +160,7 @@ public class WeatherFragment extends BaseFragment implements ResponseListener<We
       Utils.showShortToast(getActivity(), msg);
   }
 
-
+  @Override public String getTitle() {
+    return "天气";
+  }
 }

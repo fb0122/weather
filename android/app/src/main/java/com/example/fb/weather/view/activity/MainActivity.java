@@ -12,6 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.fb.weather.BaseActivity;
 import com.example.fb.weather.R;
+import com.example.fb.weather.view.fragment.HomeFragment;
 import com.example.fb.weather.view.fragment.WeatherFragment;
 
 public class MainActivity extends BaseActivity implements SensorEventListener {
@@ -31,7 +32,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
 
   private void initView(){
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.frag_main, new WeatherFragment())
+        .replace(R.id.frag_main, new HomeFragment())
         .commit();
   }
 
