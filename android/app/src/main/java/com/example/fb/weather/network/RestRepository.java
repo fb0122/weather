@@ -24,57 +24,49 @@ import timber.log.Timber;
 
 public class RestRepository implements Repository {
 
-    private final Get_Api get_api;
-    private final Post_Api post_api;
-    private Action1<Throwable> doOnError = new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-            if (throwable != null)
-                Log.e("RestRepository", "retrofit:"+throwable.getMessage());
-        }
-    };
+  private final Get_Api get_api;
+  private final Post_Api post_api;
+  private Action1<Throwable> doOnError = new Action1<Throwable>() {
+    @Override public void call(Throwable throwable) {
+      if (throwable != null) Log.e("RestRepository", "retrofit:" + throwable.getMessage());
+    }
+  };
 
+  @Inject public RestRepository() {
+    HttpLoggingInterceptor interceptor =
+        new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
 
-    @Inject
-    public RestRepository() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-
-            @Override public void log(String message) {
-                Timber.d(message);
-            }
+          @Override public void log(String message) {
+            Timber.d(message);
+          }
         });
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addNetworkInterceptor(interceptor)
-                .readTimeout(3, TimeUnit.MINUTES)
-                .build();
-        Gson customGsonInstance = new GsonBuilder()
-                .enableComplexMapKeySerialization()
-                .create();
-        Retrofit getApiAdapter = new Retrofit.Builder()
-                .baseUrl(Constants.weather_server)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(interceptor)
+        .readTimeout(3, TimeUnit.MINUTES)
+        .build();
+    Gson customGsonInstance = new GsonBuilder().enableComplexMapKeySerialization().create();
 
-        Retrofit postApiAdapter = new Retrofit.Builder()
-                .baseUrl(Constants.weather_server)
-                .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .client(client)
-                .build();
+    Retrofit getApiAdapter = new Retrofit.Builder().baseUrl(Constants.weather_server)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
 
-        get_api = getApiAdapter.create(Get_Api.class);
-        post_api = postApiAdapter.create(Post_Api.class);
-    }
+    Retrofit postApiAdapter = new Retrofit.Builder().baseUrl(Constants.weather_server)
+        .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .client(client)
+        .build();
 
-    public Get_Api getGet_api() {
-        return get_api;
-    }
+    get_api = getApiAdapter.create(Get_Api.class);
+    post_api = postApiAdapter.create(Post_Api.class);
+  }
 
-    public Post_Api getPost_api() {
-        return post_api;
-    }
+  public Get_Api getGet_api() {
+    return get_api;
+  }
 
+  public Post_Api getPost_api() {
+    return post_api;
+  }
 }

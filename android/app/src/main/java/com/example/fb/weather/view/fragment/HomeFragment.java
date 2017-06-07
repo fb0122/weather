@@ -48,6 +48,7 @@ public class HomeFragment extends BaseFragment {
 
     if (adapter.getCount() <= 0) {
       fragments.add(new WeatherFragment());
+      fragments.add(new CommunityFragment());
     }
 
     weatherPager.setAdapter(adapter);

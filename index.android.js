@@ -9,11 +9,54 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  Image,
+  View,
+  TouchableOpacity,
+  DrawerLayoutAndroid
 } from 'react-native';
 
 export default class Weather extends Component {
   render() {
+    var navigationView = (
+  <View style={styles.container}>
+    <View style={styles.nav_top_view}>
+        <Image 
+           style={{width: 50, height: 50}}
+           source={require('./img/head.jpg')}
+        />
+        <Text
+          style={{marginTop:10,fontSize:16,color:'white'}}>非著名程序员</Text>
+    </View>
+   <TouchableOpacity
+      onPress={this.close}
+    >
+    <View style={styles.nav_item_view}>
+      <Image 
+         style={{width: 20, height: 20}}
+         source={require('./img/nav_icon_home.png')}
+      />
+      <Text
+        style={{fontSize:14,color:'grey',marginLeft:10}}>首页</Text>
+    </View>
+    </TouchableOpacity>
+    <View style={styles.nav_item_view}>
+    <Image 
+       style={{width: 20, height: 20}}
+       source={require('./img/nav_icon_gift.png')}
+    />
+    <Text
+      style={{fontSize:14,color:'grey',marginLeft:10}}>礼物</Text>
+    </View>
+    <View style={styles.nav_item_view}>
+    <Image 
+       style={{width: 20, height: 20}}
+       source={require('./img/nav_icon_settings.png')}
+    />
+    <Text
+      style={{fontSize:14,color:'grey',marginLeft:10}}>设置</Text>
+    </View>
+  </View>
+  );
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>

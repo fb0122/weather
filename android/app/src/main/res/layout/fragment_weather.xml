@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_grey"
+    android:background="@color/transparent"
     >
 
   <FrameLayout
@@ -16,7 +16,7 @@
         android:id="@+id/layout_weather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_grey"
+        android:background="@color/transparent"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:paddingLeft="22dp"
